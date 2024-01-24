@@ -1,3 +1,6 @@
+*.zip
+xlc_temp_files/whl_package/*
+
 *~
 \#*#
 */typestubs/*
