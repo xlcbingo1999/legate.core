@@ -1,13 +1,12 @@
 {
   "packages" : {
     "Thrust" : {
-      "version" : "1.17.0.0",
-      "git_url" : "https://github.com/NVIDIA/thrust.git",
-      "git_tag" : "1.17.0"
+      "git_url" : "https://gitee.com/fantasticg/thrust.git",
+      "git_tag" : "6a3078c64cab0e2f276340fa5dcafa0d758ed890"
     },
     "Legion": {
-      "git_url" : "https://gitlab.com/StanfordLegion/legion.git",
-      "git_tag" : "0cbee456b9ee80e494262f663bd4838666bdd0be"
+      "git_url" : "https://gitee.com/moyusir/legion.git",
+      "git_tag" : "340f9728fdbbee323ffc9d32985ed498a9328386"
     }
   }
 }

@@ -1,0 +1,410 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Hello_World",
+  "steps": [
+    {
+      "file": "examples/hello/examples/hello-world.py",
+      "description": "第一步, 就是要从conda虚拟环境里面读到hello这个package! 如果只是直接用, 是读不到这个package的",
+      "line": 19
+    },
+    {
+      "file": "examples/hello/hello/__init__.py",
+      "description": "hello模块的__init__也是从library和hello中读取相关的变量和函数, 先从.library",
+      "line": 18
+    },
+    {
+      "file": "examples/hello/hello/library.py",
+      "description": "import legate.core的相关内容, 所以需要先初始化这部分的内容",
+      "line": 16
+    },
+    {
+      "file": "legate/core/__init__.py",
+      "description": "在 Python 中，from __future__ import annotations 语句是用来引入 Python 3.7 中引入的类型注解功能的。这个语句允许你在程序中声明变量或函数的类型，并由编译器或其他工具来检查代码的类型是否正确。\n\n例如，你可以在函数的参数列表中声明参数的类型，或者在函数的返回语句中声明函数返回的类型。这样做的好处是可以提高代码的可读性，并且有助于发现类型错误。",
+      "line": 15
+    },
+    {
+      "file": "legate/core/__init__.py",
+      "description": "这里就是一个比较需要额外理解的地方了, legion_cffi内部是只有声明没有实现的, 正常来说实现应该是写在C++里面的, 但是我还没找到具体的实现位置",
+      "line": 17,
+      "title": "[重点] cffi"
+    },
+    {
+      "file": "legate/core/__init__.py",
+      "description": "is_legion_python为false的逻辑, 暂时还不知道执行起来会走哪一步",
+      "line": 19,
+      "selection": {
+        "start": {
+          "line": 19,
+          "character": 4
+        },
+        "end": {
+          "line": 19,
+          "character": 20
+        }
+      }
+    },
+    {
+      "file": "legate/core/__init__.py",
+      "description": "从._legion中获取大量的类、函数和变量",
+      "line": 39
+    },
+    {
+      "file": "legate/core/_legion/__init__.py",
+      "description": "主要的两个环境变量：LEGATE_MAX_DIM和LEGATE_MAX_FIELDS",
+      "line": 17
+    },
+    {
+      "file": "legate/core/_legion/__init__.py",
+      "description": "A FieldID class wraps a `legion_field_id_t` in the Legion C API.\n用于装饰legion中的field",
+      "line": 18
+    },
+    {
+      "file": "legate/core/_legion/__init__.py",
+      "description": "Future对象表示任务或其他操作的待决计算。future可以以字节缓冲区的形式携带“非结构化”数据，也可以是空的，仅用于同步。\nA Future object represents a pending computation from a task or other operation. Futures can carry \"unstructured\" data as a buffer of bytes or they can be empty and used only for synchronization.",
+      "line": 19
+    },
+    {
+      "file": "legate/core/_legion/__init__.py",
+      "description": "Legion中最经典的Region结构",
+      "line": 20
+    },
+    {
+      "file": "legate/core/_legion/__init__.py",
+      "description": "[重要] Legion的接口的binding",
+      "line": 21
+    },
+    {
+      "file": "legate/core/_legion/__init__.py",
+      "description": "划分相关的接口",
+      "line": 35
+    },
+    {
+      "file": "legate/core/__init__.py",
+      "description": "Allocation相关的库",
+      "line": 86
+    },
+    {
+      "file": "legate/core/__init__.py",
+      "description": "machine相关的库, 其中主要是GPU, OMP和CPU",
+      "line": 93
+    },
+    {
+      "file": "examples/hello/hello/library.py",
+      "description": "初始化名称为hello的一个UserLibrary",
+      "line": 53,
+      "selection": {
+        "start": {
+          "line": 53,
+          "character": 12
+        },
+        "end": {
+          "line": 53,
+          "character": 23
+        }
+      }
+    },
+    {
+      "file": "examples/hello/hello/library.py",
+      "description": "获取legate的runtime, 然后把UserLib注册进来",
+      "line": 54
+    },
+    {
+      "file": "examples/hello/hello/__init__.py",
+      "description": "导入hello库相关的函数",
+      "line": 19
+    },
+    {
+      "file": "examples/hello/examples/hello-world.py",
+      "description": "正式进入函数中",
+      "line": 21
+    },
+    {
+      "file": "examples/hello/hello/hello.py",
+      "description": "创建一个task以进行使用",
+      "line": 43
+    },
+    {
+      "file": "legate/core/context.py",
+      "description": "自动创建一个task",
+      "line": 216
+    },
+    {
+      "file": "legate/core/context.py",
+      "description": "从runtime内部去自动创建task\n",
+      "line": 243
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "利用自定义的AutoTask类",
+      "line": 1674
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "slice_machine_for_task, 用于只获取部分的machine, 用于设置Operator的_target_machine",
+      "line": 1678,
+      "selection": {
+        "start": {
+          "line": 1678,
+          "character": 27
+        },
+        "end": {
+          "line": 1678,
+          "character": 49
+        }
+      }
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "创建一个AutoTask实例",
+      "line": 1680
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "调用上层类的初始化方案",
+      "line": 691
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "再进入上层类Operation的初始化",
+      "line": 664
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "大量的初始化内容, 暂时不看了",
+      "line": 140,
+      "selection": {
+        "start": {
+          "line": 148,
+          "character": 14
+        },
+        "end": {
+          "line": 148,
+          "character": 29
+        }
+      }
+    },
+    {
+      "file": "examples/hello/hello/hello.py",
+      "description": "将message传入给_scalar_arg",
+      "line": 44
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "把输入的值和类型放到 task._scalar_args 之中",
+      "line": 438
+    },
+    {
+      "file": "examples/hello/hello/hello.py",
+      "description": "执行task",
+      "line": 45
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "将Operation自身提交给runtime\n",
+      "line": 252
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "错误处理",
+      "line": 1405
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "如果当前需要处理的_outstanding_ops的op超过_window_size, 因此需要重新刷新scheduling_window",
+      "line": 1408,
+      "selection": {
+        "start": {
+          "line": 1409,
+          "character": 18
+        },
+        "end": {
+          "line": 1409,
+          "character": 41
+        }
+      }
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "刷新调度窗口",
+      "line": 1409
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "清空_outstanding_ops之后, 调度相关的op",
+      "line": 1402
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "引入了一个调度solver, 很有意思的设计",
+      "line": 1379
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "根据每个op构建partitioner",
+      "line": 1387
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "with创建的上下文管理器, 需要先进入Machine实例的__enter__, 执行完需要执行__exit__",
+      "line": 1390
+    },
+    {
+      "file": "legate/core/machine.py",
+      "description": "主要的逻辑是将new_machine推入runtime中",
+      "line": 490,
+      "selection": {
+        "start": {
+          "line": 222,
+          "character": 44
+        },
+        "end": {
+          "line": 222,
+          "character": 57
+        }
+      }
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "对每个partitioner, 都需要执行partition_stores()去获取相关的strategy. 注意, 每个op都要对应一个strategy",
+      "line": 1391
+    },
+    {
+      "file": "legate/core/solver.py",
+      "description": "[重点] 非常复杂的逻辑, 用于获取每个op的Strategy",
+      "line": 481,
+      "selection": {
+        "start": {
+          "line": 474,
+          "character": 35
+        },
+        "end": {
+          "line": 474,
+          "character": 43
+        }
+      },
+      "title": "[重点] partition_stores"
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "每个op需要launch strategy, 基本都是由上层实现的",
+      "line": 1395
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "Hello创建的AutoTask会调用这个launch方法, 这里就是AutoTask和Legion交接的核心逻辑",
+      "line": 823
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "选择重用的store",
+      "line": 830
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "处理input相关的store [Hello World没有] ",
+      "line": 832
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "处理output相关的store [Hello World没有]",
+      "line": 836
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "处理reduction相关的store [Hello World没有]",
+      "line": 850
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "这里是对unbound的output做了额外的处理! ",
+      "line": 864
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "将_scalar_args加入, Hello World就有相关的",
+      "line": 871
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "并行相关走这里",
+      "line": 881
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "标准任务走这里",
+      "line": 883
+    },
+    {
+      "file": "legate/core/launcher.py",
+      "description": "创建一个buffer, 然后将task和buf关联",
+      "line": 1005
+    },
+    {
+      "file": "legate/core/launcher.py",
+      "description": "本函数设置single_task的相关参数，req、future、out_req\n以及set_local_function、set_sharding_space、set_point、set_mapper_arg等相关操作",
+      "line": 953,
+      "selection": {
+        "start": {
+          "line": 989,
+          "character": 14
+        },
+        "end": {
+          "line": 989,
+          "character": 28
+        }
+      }
+    },
+    {
+      "file": "legate/core/context.py",
+      "description": "发射task",
+      "line": 293
+    },
+    {
+      "file": "legate/core/runtime.py",
+      "description": "处理相关的参数后, 发射给legion_runtime",
+      "line": 1373
+    },
+    {
+      "file": "legate/core/_legion/util.py",
+      "description": "将legate_task包装成Legion需要的",
+      "line": 163
+    },
+    {
+      "file": "legate/core/_legion/util.py",
+      "description": "真正执行函数的地方",
+      "line": 164,
+      "title": "[重要] 执行函数的地方"
+    },
+    {
+      "file": "legate/core/launcher.py",
+      "description": "结果处理",
+      "line": 1006,
+      "selection": {
+        "start": {
+          "line": 1005,
+          "character": 23
+        },
+        "end": {
+          "line": 1005,
+          "character": 31
+        }
+      }
+    },
+    {
+      "file": "legate/core/operation.py",
+      "description": "保存scalar",
+      "line": 885,
+      "selection": {
+        "start": {
+          "line": 885,
+          "character": 14
+        },
+        "end": {
+          "line": 885,
+          "character": 34
+        }
+      }
+    }
+  ],
+  "ref": "branch-24.01"
+}

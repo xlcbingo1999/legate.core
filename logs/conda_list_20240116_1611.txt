@@ -1,0 +1,35 @@
+# packages in environment at /home/netlab/anaconda3/envs/qingdao-legate:
+#
+# Name                    Version                   Build  Channel
+_libgcc_mutex             0.1                        main    defaults
+_openmp_mutex             5.1                       1_gnu    defaults
+bzip2                     1.0.8                h7b6447c_0    defaults
+ca-certificates           2023.12.12           h06a4308_0    defaults
+cmake                     3.27.4               hcfe8598_4    <unknown>
+cython                    3.0.6            py39h5eee18b_0    <unknown>
+distro                    1.8.0              pyhd8ed1ab_0    <unknown>
+expat                     2.5.0                h6a678d5_0    defaults
+ld_impl_linux-64          2.38                 h1181459_1    defaults
+libffi                    3.4.2                h7f98852_5    <unknown>
+libgcc-ng                 11.2.0               h1234567_1    defaults
+libgomp                   11.2.0               h1234567_1    defaults
+libstdcxx-ng              11.2.0               h1234567_1    defaults
+libuuid                   2.38.1               h0b41bf4_0    <unknown>
+ncurses                   6.4                  h6a678d5_0    defaults
+ninja                     1.10.2           py39h5e70eb0_3    <unknown>
+numpy                     1.26.2           py39h474f0d3_0    <unknown>
+openssl                   3.2.0                hd590300_1    <unknown>
+packaging                 23.2               pyhd8ed1ab_0    <unknown>
+pip                       23.3.1           py39h06a4308_0    <unknown>
+python                    3.9.18          h0755675_0_cpython    <unknown>
+readline                  8.2                  h5eee18b_0    defaults
+scikit-build              0.17.6             pyh4af843d_0    <unknown>
+setuptools                68.0.0           py39h06a4308_0    <unknown>
+sqlite                    3.41.2               h5eee18b_0    defaults
+tk                        8.6.12               h1ccaba5_0    defaults
+tomli                     2.0.1              pyhd8ed1ab_0    <unknown>
+typing_extensions         4.9.0              pyha770c72_0    <unknown>
+tzdata                    2023d                h04d1e81_0    defaults
+wheel                     0.41.2             pyhd8ed1ab_0    <unknown>
+xz                        5.4.5                h5eee18b_0    defaults
+zlib                      1.2.13               h5eee18b_0    defaults

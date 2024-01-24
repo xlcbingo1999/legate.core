@@ -49,6 +49,7 @@ function(find_or_configure_legion)
       INSTALL_EXPORT_SET legate-core-exports)
 
   if((NOT CPM_Legion_SOURCE) AND (NOT CPM_DOWNLOAD_Legion))
+    message("[xlc_todo_delete] (NOT CPM_Legion_SOURCE) AND (NOT CPM_DOWNLOAD_Legion)")
     # First try to find Legion via find_package()
     # so the `Legion_USE_*` variables are visible
     # Use QUIET find by default.
@@ -62,9 +63,10 @@ function(find_or_configure_legion)
   endif()
 
   if(Legion_FOUND)
+    message("[xlc_todo_delete] Legion_FOUND")
     message(STATUS "CPM: using local package Legion@${version}")
   else()
-
+    message("[xlc_todo_delete] Legion_NOT_FOUND")
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/cpm_helpers.cmake)
     get_cpm_git_args(legion_cpm_git_args REPOSITORY ${git_repo} BRANCH ${git_branch})
     if(NOT DEFINED Legion_PYTHON_EXTRA_INSTALL_ARGS)
@@ -116,11 +118,14 @@ function(find_or_configure_legion)
     message(VERBOSE "legate.core: Legion exclude_from_all: ${exclude_from_all}")
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-      set(Legion_BACKTRACE_USE_LIBDW ON)
+      message("[xlc_todo_delete] off Legion_BACKTRACE_USE_LIBDW")
+      set(Legion_BACKTRACE_USE_LIBDW OFF)
     else()
       set(Legion_BACKTRACE_USE_LIBDW OFF)
     endif()
 
+    message("[xlc_todo_delete] will come to rapids_cpm_find Legion")
+    message("[xlc_todo_delete] rapids_cpm_find Legion version: ${version}; FIND_PKG_ARGS: ${FIND_PKG_ARGS}; legion_cpm_git_args: ${legion_cpm_git_args}; exclude_from_all: ${exclude_from_all}")
     rapids_cpm_find(Legion ${version} ${FIND_PKG_ARGS}
         CPM_ARGS
           ${legion_cpm_git_args}
@@ -132,7 +137,7 @@ function(find_or_configure_legion)
                                  "Legion_BUILD_BINDINGS ON"
                                  "Legion_REDOP_HALF ON"
                                  "Legion_REDOP_COMPLEX ON"
-                                 "Legion_BUILD_RUST_PROFILER ON"
+                                 "Legion_BUILD_RUST_PROFILER OFF"
     )
   endif()
 

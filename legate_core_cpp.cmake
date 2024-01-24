@@ -269,6 +269,7 @@ if(Legion_USE_CUDA)
   endif()
 endif()
 
+message("[xlc_todo_delete] before get legate_core")
 target_link_libraries(legate_core
    PUBLIC Legion::Legion
           legate::Thrust

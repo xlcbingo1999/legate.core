@@ -16,11 +16,14 @@
 
 # Use CPM to find or clone thrust
 function(find_or_configure_thrust)
+    message("[xlc_todo_delete] begin in find_or_configure_thrust")
     include(${rapids-cmake-dir}/cpm/thrust.cmake)
+    message("[xlc_todo_delete] finished include thrust.cmake")
 
     rapids_cpm_thrust(NAMESPACE legate
                       BUILD_EXPORT_SET legate-core-exports
                       INSTALL_EXPORT_SET legate-core-exports)
+    message("[xlc_todo_delete] finished rapids_cpm_thrust")
 endfunction()
 
 find_or_configure_thrust()

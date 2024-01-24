@@ -61,9 +61,10 @@ endif()
 ##############################################################################
 # - Download and initialize RAPIDS CMake helpers -----------------------------
 
+message("[xlc_todo_delete] check CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+message("[xlc_todo_delete] check one arg: ${}")
 if(NOT EXISTS ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
-  file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.08/RAPIDS.cmake
-       ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
+  file(COPY /home/netlab/legate/legate.core/xlc_temp_files/RAPIDS.cmake DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
 include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
 include(rapids-cmake)

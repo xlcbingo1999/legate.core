@@ -1,0 +1,73 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Math_Op",
+  "steps": [
+    {
+      "file": "examples/reduction/examples/histogram.py",
+      "description": "主函数",
+      "line": 66
+    },
+    {
+      "file": "examples/reduction/examples/histogram.py",
+      "description": "创建一个int32类型, size大小的input store",
+      "line": 25
+    },
+    {
+      "file": "examples/reduction/examples/histogram.py",
+      "description": "1. 生成随机数, 似乎没做什么额外的优化;\n2. 将input的store修改成np.asarray()的改造",
+      "line": 26
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/module.py",
+      "description": "针对ndarray进行numpy thunk的切分",
+      "line": 579
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/module.py",
+      "description": "获取numpy的thunk",
+      "line": 580
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/runtime.py",
+      "description": "利用迭代算法获取下一个field",
+      "line": 278,
+      "selection": {
+        "start": {
+          "line": 270,
+          "character": 31
+        },
+        "end": {
+          "line": 270,
+          "character": 56
+        }
+      }
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/runtime.py",
+      "description": "将store的内容获取出来 然后包装到DeferredArray中?",
+      "line": 285
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/runtime.py",
+      "description": "不太能理解这个函数的意义, 理论上应该是一个很重要的函数",
+      "line": 300,
+      "title": "[重要] 需要理解这个函数的设计"
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/runtime.py",
+      "description": "递归?",
+      "line": 392
+    },
+    {
+      "file": "../../anaconda3/envs/legate-develop/lib/python3.9/site-packages/cunumeric/module.py",
+      "description": "根据thunk的结果去创建ndarray",
+      "line": 582
+    },
+    {
+      "file": "examples/reduction/examples/histogram.py",
+      "description": "categorize函数?",
+      "line": 38
+    }
+  ],
+  "ref": "branch-24.01"
+}

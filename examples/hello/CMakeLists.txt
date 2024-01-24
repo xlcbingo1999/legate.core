@@ -20,7 +20,6 @@ project(hello VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(BUILD_SHARED_LIBS ON)
-
 find_package(legate_core REQUIRED)
 
 legate_cpp_library_template(src TARGET hello)
