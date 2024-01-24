@@ -73,17 +73,6 @@ class System:
         return os
 
     @cached_property
-    def LIB_PATH(self) -> str:
-        """An ld library path environment variable name suitable for the OS
-
-        Returns
-        -------
-            str
-
-        """
-        return "LD_LIBRARY_PATH" if self.os == "Linux" else "DYLD_LIBRARY_PATH"
-
-    @cached_property
     def cpus(self) -> tuple[CPUInfo, ...]:
         """A list of CPUs on the system."""
 
@@ -113,7 +102,7 @@ class System:
             # case pynvml is not installed, tests stages that don't need gpu
             # info (e.g. cpus, eager) will proceed unaffected. Test stages
             # that do require gpu info will fail here with an ImportError.
-            import pynvml  # type: ignore[import]
+            import pynvml  # type: ignore[import-not-found]
 
             # Also a pynvml package is available on some platforms that won't
             # have GPUs for some reason. In which case this init call will

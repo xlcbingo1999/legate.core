@@ -15,7 +15,7 @@ from __future__ import annotations
 from argparse import Action, ArgumentParser
 from dataclasses import dataclass
 from textwrap import indent
-from typing import Literal, Tuple
+from typing import Literal, Tuple, Union
 
 # --- Types -------------------------------------------------------------------
 
@@ -25,8 +25,12 @@ OSType = Literal["linux", "osx"]
 
 
 def V(version: str) -> tuple[int, ...]:
-    padded_version = (version.split(".") + ["0"])[:2]
+    padded_version = (version.split(".") + ["0", "0"])[:3]
     return tuple(int(x) for x in padded_version)
+
+
+def drop_patch(version: str) -> str:
+    return ".".join(version.split(".")[:2])
 
 
 class SectionConfig:
@@ -53,7 +57,7 @@ class SectionConfig:
 
 @dataclass(frozen=True)
 class CUDAConfig(SectionConfig):
-    ctk_version: str
+    ctk_version: Union[str, None]
     compilers: bool
     os: OSType
 
@@ -61,37 +65,52 @@ class CUDAConfig(SectionConfig):
 
     @property
     def conda(self) -> Reqs:
-        if self.ctk_version == "none":
+        if not self.ctk_version:
             return ()
 
         deps = (
-            f"cuda-version={self.ctk_version}",  # runtime
-            # See https://github.com/nv-legate/cunumeric/issues/1092
-            "cutensor>=1.3.3,<2",  # runtime
+            f"cuda-version={drop_patch(self.ctk_version)}",  # runtime
+            # cuTensor package notes:
+            # - We are pinning to 1.X major version.
+            #   See https://github.com/nv-legate/cunumeric/issues/1092.
+            # - The cuTensor packages on the nvidia channel are not well
+            #   structured. The multiple levels of packages are not connected
+            #   by strict dependencies, and the CTK compatibility is encoded
+            #   in the package name, rather than a constraint or label.
+            #   For now we pin to the conda-forge versions (which use build
+            #   numbers starting with h).
+            "cutensor=1.7*=h*",  # runtime
             "nccl",  # runtime
             "pynvml",  # tests
         )
 
-        if V(self.ctk_version) >= V("12.0"):
+        if V(self.ctk_version) < (12, 0, 0):
+            deps += (f"cudatoolkit={self.ctk_version}",)
+        else:
             deps += (
+                "cuda-cccl",  # no cuda-cccl-dev package on the nvidia channel
                 "cuda-cudart-dev",
+                "cuda-cudart-static",
+                "cuda-driver-dev",
                 "cuda-nvml-dev",
-                "cuda-nvtx-dev",
+                "cuda-nvtx",  # no cuda-nvtx-dev package on the nvidia channel
                 "libcublas-dev",
                 "libcufft-dev",
                 "libcurand-dev",
                 "libcusolver-dev",
+                "libcusparse-dev",
+                "libnvjitlink-dev",
             )
 
         if self.compilers:
             if self.os == "linux":
-                if V(self.ctk_version) < V("12.0"):
-                    deps += (f"nvcc_linux-64={self.ctk_version}",)
+                if V(self.ctk_version) < (12, 0, 0):
+                    deps += (f"nvcc_linux-64={drop_patch(self.ctk_version)}",)
                 else:
                     deps += ("cuda-nvcc",)
 
-                # gcc 11.3 is incompatible with nvcc <= 11.5.
-                if V(self.ctk_version) <= V("11.5"):
+                # gcc 11.3 is incompatible with nvcc < 11.6.
+                if V(self.ctk_version) < (11, 6, 0):
                     deps += (
                         "gcc_linux-64<=11.2",
                         "gxx_linux-64<=11.2",
@@ -105,7 +124,7 @@ class CUDAConfig(SectionConfig):
         return deps
 
     def __str__(self) -> str:
-        if self.ctk_version == "none":
+        if not self.ctk_version:
             return ""
 
         return f"-cuda{self.ctk_version}"
@@ -125,7 +144,7 @@ class BuildConfig(SectionConfig):
         pkgs = (
             # 3.25.0 triggers gitlab.kitware.com/cmake/cmake/-/issues/24119
             "cmake>=3.24,!=3.25.0",
-            "cython",
+            "cython>=3",
             "git",
             "make",
             "rust",
@@ -140,7 +159,17 @@ class BuildConfig(SectionConfig):
         if self.compilers:
             pkgs += ("c-compiler", "cxx-compiler")
         if self.openmpi:
-            pkgs += ("openmpi",)
+            # Using a more recent version of OpenMPI in combination with the
+            # system compilers fails with: "Could NOT find MPI (missing:
+            # MPI_CXX_FOUND CXX)". The reason is that conda-forge's libmpi.so
+            # v5 is linked against the conda-forge libstdc++.so. CMake will not
+            # use the mpicc-suggested host compiler (conda-forge's gcc) when
+            # running the FindMPI tests. Instead it will use the "main"
+            # compiler it was configured with, i.e. the system compiler, which
+            # links agains the system libstdc++.so, causing libmpi.so's symbol
+            # version checks to fail. Using v5+ OpenMPI from conda-forge
+            # requires using the conda-forge compilers.
+            pkgs += ("openmpi<5",)
         if self.ucx:
             pkgs += ("ucx>=1.14",)
         if self.os == "linux":
@@ -231,10 +260,18 @@ class EnvConfig:
     use: str
     python: str
     os: OSType
-    ctk: str
+    ctk_version: Union[str, None]
     compilers: bool
     openmpi: bool
     ucx: bool
+
+    @property
+    def channels(self) -> str:
+        channels = []
+        if self.ctk_version and V(self.ctk_version) >= (12, 0, 0):
+            channels.append(f"nvidia/label/cuda-{self.ctk_version}")
+        channels.append("conda-forge")
+        return "- " + "\n- ".join(channels)
 
     @property
     def sections(self) -> Tuple[SectionConfig, ...]:
@@ -248,7 +285,7 @@ class EnvConfig:
 
     @property
     def cuda(self) -> CUDAConfig:
-        return CUDAConfig(self.ctk, self.compilers, self.os)
+        return CUDAConfig(self.ctk_version, self.compilers, self.os)
 
     @property
     def build(self) -> BuildConfig:
@@ -275,26 +312,13 @@ class EnvConfig:
 
 PYTHON_VERSIONS = ("3.9", "3.10", "3.11")
 
-CTK_VERSIONS = (
-    "none",
-    "11.4",
-    "11.5",
-    "11.6",
-    "11.7",
-    "11.8",
-    "12.0",
-    # TODO: libcublas 12.1 not available on conda-forge as of 2023-06-12
-    # "12.1",
-)
-
 OS_NAMES: Tuple[OSType, ...] = ("linux", "osx")
 
 
 ENV_TEMPLATE = """\
 name: legate-{use}
 channels:
-  - conda-forge
-  - nvidia
+{channels}
 dependencies:
 
   - python={python},!=3.9.7  # avoid https://bugs.python.org/issue45121
@@ -370,8 +394,6 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--ctk",
-        choices=CTK_VERSIONS,
-        default="none",
         dest="ctk_version",
         help="CTK version to generate for",
     )
@@ -411,6 +433,14 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args(sys.argv[1:])
+
+    if (
+        args.ctk_version
+        and V(args.ctk_version) >= (12, 0, 0)
+        and len(args.ctk_version.split(".")) != 3
+    ):
+        # This is necessary to match on the exact label on the nvidia channel
+        raise ValueError("CTK 12 versions must be in the form 12.X.Y")
 
     selected_sections = None
 
@@ -461,6 +491,7 @@ if __name__ == "__main__":
     print(f"--- generating: {filename}.yaml")
     out = ENV_TEMPLATE.format(
         use=config.use,
+        channels=config.channels,
         python=config.python,
         conda_sections=conda_sections,
         pip=PIP_TEMPLATE.format(pip_sections=pip_sections)
